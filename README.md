@@ -4,18 +4,27 @@ An exploratory geospatial AI course project that evaluates how consistently larg
 
 The project was completed at the **Technical University of Munich (TUM)** for *Mapping for a Sustainable World*. It combines global POI sampling, reference geocoding, LLM inference, spatial accuracy metrics, H3 aggregation, and map-based analysis.
 
-![Distance-error maps for three evaluated models](figures/distance_error_models.png)
+## Project workflow
 
-## What I built
+![Course-project workflow from sampling to visualization](figures/workflow_overview.png)
 
-- Constructed a geographically distributed POI sample from GeoNames and OpenStreetMap data.
-- Generated reference coordinates and bounding boxes with Nominatim and administrative boundaries from GADM.
-- Queried GPT-3.5, GPT-4, and DeepSeek for structured geocoding predictions.
-- Evaluated point predictions with Haversine distance and bounding boxes with intersection over union (IoU).
-- Aggregated errors into H3 cells to inspect geographic variation and created global comparison maps.
-- Developed the workflow in Python with pandas, GeoPandas, Shapely, H3, Matplotlib, and web APIs.
+The final course presentation organized the work into five stages:
 
-## Dataset and course-run results
+1. **Global sampling.** The design targeted 5,000 cities from GeoNames `cities15000`, aimed to keep sampled cities geographically separated, and selected one OpenStreetMap POI within 10 km of each city centre. Each query used the form `[POI, Administrative Region, Country]`.
+2. **Reference generation.** Nominatim supplied reference coordinates and POI bounding boxes. GADM supplied country and administrative-region boundaries.
+3. **LLM geocoding.** GPT-3.5, GPT-4, and the intended DeepSeek R1 model returned a point and a bounding box for each place description.
+4. **Error analysis.** Haversine distance measured point-location error. Intersection over Union (IoU) measured bounding-box overlap.
+5. **Spatial aggregation.** H3 resolution 2 cells grouped the observations so regional error patterns could be compared on global maps.
+
+I implemented this workflow in Python using pandas, GeoPandas, Shapely, H3, Matplotlib, Nominatim, Overpass, and model APIs.
+
+## H3 aggregation
+
+The analysis assigned each reference coordinate to an H3 resolution 2 cell and averaged the observations within each populated cell. This reduced thousands of individual points to a common global spatial index for comparing regional patterns.
+
+![H3 resolution 2 global grid used for aggregation](figures/h3_global_grid.png)
+
+## Course-run results
 
 The sampling pipeline targeted 5,000 POIs. After reference geocoding and validation, the completed course run contained **4,590 evaluable locations**.
 
@@ -27,7 +36,67 @@ The sampling pipeline targeted 5,000 POIs. After reference geocoding and validat
 
 The gap between the medians and means reflects a small number of very large geocoding errors. These values describe the historical course run and should not be interpreted as a current model leaderboard.
 
-![Historical course-run box plots](figures/error_boxplots.png)
+### Point-distance error
+
+The course presentation compared the mean Haversine distance error in every populated H3 cell. The maps use a shared 0–5 km colour range; black points mark values outside the displayed range.
+
+#### GPT-3.5
+
+![GPT-3.5 distance error by H3 cell](figures/distance_gpt35.png)
+
+#### GPT-4
+
+![GPT-4 distance error by H3 cell](figures/distance_gpt4.png)
+
+#### DeepSeek
+
+![DeepSeek distance error by H3 cell](figures/distance_deepseek.png)
+
+The box plot makes the central distributions easier to compare. It displays the lower error range used in the final presentation, while the summary table above retains the full-data means and medians.
+
+![Distance-error distribution by model](figures/distance_boxplot.png)
+
+### Bounding-box overlap
+
+The IoU maps show how closely the model-generated bounding boxes overlapped the reference boxes after H3 aggregation. Higher values indicate greater overlap.
+
+#### GPT-3.5
+
+![GPT-3.5 IoU by H3 cell](figures/iou_gpt35.png)
+
+#### GPT-4
+
+![GPT-4 IoU by H3 cell](figures/iou_gpt4.png)
+
+#### DeepSeek
+
+![DeepSeek IoU by H3 cell](figures/iou_deepseek.png)
+
+![IoU distribution by model](figures/iou_boxplot.png)
+
+### Bounding-box case studies
+
+The final presentation used individual POIs to show why IoU is more difficult to interpret than point distance. Different models may identify the correct place while using different spatial extents. Small reference boxes, duplicated POI names, and different definitions of a place boundary can all reduce IoU.
+
+| Times Square, New York | Eiffel Tower, Paris |
+|---|---|
+| ![Bounding-box comparison for Times Square](figures/bbox_times_square.png) | ![Bounding-box comparison for the Eiffel Tower](figures/bbox_eiffel_tower.png) |
+
+The Googleplex example shows a larger disagreement in both position and extent:
+
+<p align="center">
+  <img src="figures/bbox_googleplex.png" alt="Bounding-box comparison for Googleplex" width="680">
+</p>
+
+### Interpretation in the final presentation
+
+The course presentation reported three main observations:
+
+- The historical DeepSeek results had the lowest distance errors and the highest median IoU among the three recorded outputs.
+- Coordinate predictions were generally more stable than bounding-box predictions.
+- Error patterns varied geographically, with lower errors appearing more often in densely represented regions.
+
+The discussion also identified limitations in the underlying data: GeoNames does not represent all cities uniformly, locations that failed reference geocoding were excluded, and sparse local data can itself create geographic imbalance. The evaluation and model-provenance notes below add further limitations found while preparing this public repository.
 
 ### DeepSeek model provenance
 
