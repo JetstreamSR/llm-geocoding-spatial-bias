@@ -4,7 +4,7 @@
 
 ## Important limitation
 
-The historical prompts included a rounded reference bounding box. The file is preserved for transparency and for reproducing the figures, but it is not a blind benchmark dataset. Do not use its model comparison values as evidence of current model performance.
+The historical prompts included the reference bounding-box coordinates after rounding every coordinate to two decimal places. The file is preserved for transparency and for reproducing the figures, but it is not a blind benchmark dataset. Do not use its model comparison values as evidence of current model performance.
 
 The experiment was designed and reported as using DeepSeek R1. At the time of the July 2025 experiment, the `deepseek-reasoner` endpoint corresponded to DeepSeek-R1-0528. The historical outputs nevertheless lack row-level model provenance: the original script tried `deepseek-chat` first and `deepseek-reasoner` only as a fallback. Those aliases then corresponded to DeepSeek-V3-0324 and DeepSeek-R1-0528, respectively, so the saved rows cannot now confirm the exact endpoint used for every response.
 

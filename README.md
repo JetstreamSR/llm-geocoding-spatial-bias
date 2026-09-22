@@ -108,7 +108,7 @@ The cleaned pipeline avoids this ambiguity. `DEEPSEEK_MODEL` in `.env` must spec
 
 ## Evaluation note
 
-The original course experiment supplied each model with a rounded version of the reference bounding box. This made the experiment useful for exploring spatial output behavior, but it also gave the models information derived from the target answer. The historical results are therefore **reference-bbox-assisted**, not a blind geocoding benchmark.
+The original course experiment included the reference bounding-box coordinates in each model prompt after rounding every coordinate to two decimal places. This made the experiment useful for exploring spatial output behavior, but it also gave the models approximate location information derived from the target answer. The historical results are therefore **reference-bbox-assisted**, not a blind geocoding benchmark.
 
 The cleaned public pipeline in this repository removes that information from the prompt. It asks each model to geocode from the address alone, keeps the reference data outside the inference stage, and calculates metrics only after predictions have been saved. A new blind run is required before making comparative performance claims from the revised pipeline.
 
