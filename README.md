@@ -48,9 +48,9 @@ The course presentation compared the mean Haversine distance error in every popu
 
 ![GPT-4 distance error by H3 cell](figures/distance_gpt4.png)
 
-#### DeepSeek
+#### DeepSeek R1
 
-![DeepSeek distance error by H3 cell](figures/distance_deepseek.png)
+![DeepSeek R1 distance error by H3 cell](figures/distance_deepseek.png)
 
 The box plot makes the central distributions easier to compare. It displays the lower error range used in the final presentation, while the summary table above retains the full-data means and medians.
 
@@ -68,9 +68,9 @@ The IoU maps show how closely the model-generated bounding boxes overlapped the 
 
 ![GPT-4 IoU by H3 cell](figures/iou_gpt4.png)
 
-#### DeepSeek
+#### DeepSeek R1
 
-![DeepSeek IoU by H3 cell](figures/iou_deepseek.png)
+![DeepSeek R1 IoU by H3 cell](figures/iou_deepseek.png)
 
 ![IoU distribution by model](figures/iou_boxplot.png)
 
@@ -92,15 +92,15 @@ The Googleplex example shows a larger disagreement in both position and extent:
 
 The course presentation reported three main observations:
 
-- The historical DeepSeek results had the lowest distance errors and the highest median IoU among the three recorded outputs.
+- The historical DeepSeek R1 results had the lowest distance errors and the highest median IoU among the three recorded outputs.
 - Coordinate predictions were generally more stable than bounding-box predictions.
 - Error patterns varied geographically, with lower errors appearing more often in densely represented regions.
 
 The discussion also identified limitations in the underlying data: GeoNames does not represent all cities uniformly, locations that failed reference geocoding were excluded, and sparse local data can itself create geographic imbalance. The evaluation and model-provenance notes below add further limitations found while preparing this public repository.
 
-### DeepSeek model provenance
+### DeepSeek R1 model provenance
 
-The experiment was designed and reported as an evaluation of **DeepSeek R1**. At the time of the July 2025 run, DeepSeek's official change log identified the `deepseek-reasoner` endpoint as **DeepSeek-R1-0528**. This is therefore the intended DeepSeek model for the study.
+The experiment was designed and reported as an evaluation of **DeepSeek R1**. At the time of the July 2025 run, DeepSeek's official change log identified the `deepseek-reasoner` endpoint as **DeepSeek-R1-0528**. This is therefore the intended R1 version for the study.
 
 The original implementation nevertheless requested `deepseek-chat` first and used `deepseek-reasoner` only if that request failed. At that time, `deepseek-chat` corresponded to DeepSeek-V3-0324. Because the saved CSV does not contain the endpoint used for each row, the historical outputs cannot provide row-level confirmation that every response came from R1. The asterisk in the results table records this provenance limitation.
 
