@@ -24,7 +24,7 @@ SYSTEM_PROMPT = (
 MODEL_CONFIG = {
     "gpt-3.5-turbo": ("openai", "gpt-3.5-turbo"),
     "gpt-4": ("openai", "gpt-4"),
-    "deepseek-chat": ("deepseek", "deepseek-chat"),
+    "deepseek": ("deepseek", None),
 }
 
 FIELDS = ("lat", "lon", "south", "west", "north", "east")
@@ -96,21 +96,29 @@ def main() -> None:
     args = parser.parse_args()
 
     load_env_file()
+    runtime_config = dict(MODEL_CONFIG)
+    if deepseek_model := os.getenv("DEEPSEEK_MODEL"):
+        runtime_config["deepseek"] = ("deepseek", deepseek_model)
+
     clients = build_clients()
     frame = pd.read_csv(args.input)
     if "address" not in frame.columns:
         raise ValueError("Input CSV must contain an 'address' column")
 
-    missing = sorted({MODEL_CONFIG[m][0] for m in args.models} - clients.keys())
+    missing = sorted({runtime_config[m][0] for m in args.models} - clients.keys())
     if missing:
         raise RuntimeError(f"Missing API credentials for: {', '.join(missing)}")
+    if "deepseek" in args.models and not runtime_config["deepseek"][1]:
+        raise RuntimeError("Set DEEPSEEK_MODEL to an explicit DeepSeek API model identifier")
 
     rows: list[dict[str, Any]] = []
     for index, source in frame.iterrows():
         output = source.to_dict()
         for public_name in args.models:
-            provider, api_model = MODEL_CONFIG[public_name]
+            provider, api_model = runtime_config[public_name]
+            assert api_model is not None
             prefix = public_name.replace(".", "").replace("-", "_")
+            output[f"{prefix}_model"] = api_model
             last_error = ""
             for attempt in range(args.retries):
                 try:

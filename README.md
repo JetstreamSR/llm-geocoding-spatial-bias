@@ -23,11 +23,19 @@ The sampling pipeline targeted 5,000 POIs. After reference geocoding and validat
 |---|---:|---:|---:|
 | GPT-3.5 | 0.538 km | 35.246 km | 0.499 |
 | GPT-4 | 0.536 km | 26.437 km | 0.478 |
-| DeepSeek | 0.425 km | 11.096 km | 0.532 |
+| DeepSeek R1* | 0.425 km | 11.096 km | 0.532 |
 
 The gap between the medians and means reflects a small number of very large geocoding errors. These values describe the historical course run and should not be interpreted as a current model leaderboard.
 
 ![Historical course-run box plots](figures/error_boxplots.png)
+
+### DeepSeek model provenance
+
+The experiment was designed and reported as an evaluation of **DeepSeek R1**. At the time of the July 2025 run, DeepSeek's official change log identified the `deepseek-reasoner` endpoint as **DeepSeek-R1-0528**. This is therefore the intended DeepSeek model for the study.
+
+The original implementation nevertheless requested `deepseek-chat` first and used `deepseek-reasoner` only if that request failed. At that time, `deepseek-chat` corresponded to DeepSeek-V3-0324. Because the saved CSV does not contain the endpoint used for each row, the historical outputs cannot provide row-level confirmation that every response came from R1. The asterisk in the results table records this provenance limitation.
+
+The cleaned pipeline avoids this ambiguity. `DEEPSEEK_MODEL` in `.env` must specify the API model, and the exact identifier is saved in every output row. See the official [DeepSeek API change log](https://api-docs.deepseek.com/updates/) for the models associated with each API alias at a given date.
 
 ## Evaluation note
 
@@ -54,7 +62,19 @@ The original IoU implementation also created or expanded small boxes in degree s
 └── requirements.txt
 ```
 
-The 2.6 GB GADM GeoPackage, the GeoNames source dump, API credentials, caches, and IDE files are intentionally excluded. Download links and provenance notes are provided in [`data/README.md`](data/README.md).
+## Files intentionally not included
+
+| Original material | Why it is excluded | How to obtain or reproduce it |
+|---|---|---|
+| `gadm_410.gpkg` (approximately 2.6 GB) | Too large for a normal GitHub repository and distributed by an external data provider | Download the required administrative boundaries from [GADM](https://gadm.org/data.html) |
+| `cities15000.txt` | Upstream GeoNames source data should remain linked to its provider | Download it from the [GeoNames export directory](https://download.geonames.org/export/dump/) |
+| `sampled_pois.csv`, `sampled_pois_with_truth.csv`, and `sampled_pois_with_preds.csv` | Intermediate files duplicate information contained in the final course-run results | Regenerate them from the sampling, reference-geocoding, and inference stages |
+| Original prototype scripts | Replaced by the smaller public pipeline because the course versions contained duplicated experiments, ambiguous model fallback behavior, and reference information in the inference prompt | Use the cleaned scripts under `src/` |
+| `.idea/`, `__pycache__/`, `.DS_Store`, `Project.zip`, and exploratory test plots | Local development state, caches, duplicated files, and debugging artifacts | Not required to reproduce the public workflow |
+| API credentials and `.env` | Private secrets must never be committed | Copy `.env.example` to `.env` and provide your own credentials locally |
+| Course report and presentation files | Retained as local academic deliverables; the repository summarizes their methods and results in a web-readable form | Available from the author on request |
+
+Additional data provenance notes are provided in [`data/README.md`](data/README.md).
 
 ## Reproduce the cleaned evaluation
 
@@ -74,7 +94,7 @@ Copy `.env.example` to `.env`, add your own keys, and run one or more configured
 python src/query_models.py \
   --input data/your_reference_data.csv \
   --output data/blind_predictions.csv \
-  --models gpt-4 deepseek-chat
+  --models gpt-4 deepseek
 ```
 
 Then calculate the metrics and generate summary plots:
