@@ -23,4 +23,4 @@ The original GADM GeoPackage was approximately 2.6 GB and is excluded from versi
 
 ## Intermediate files
 
-The original course folder also contained separate sampling, reference, and prediction CSV files. They are omitted because `course_run_results.csv` contains the combined records needed to reproduce the published figures. Development caches, IDE settings, archived project copies, exploratory test plots, and API credentials are not part of the public dataset.
+The original course folder also contained separate sampling, reference, and prediction CSV files. They are omitted because `course_run_results.csv` contains the combined records needed to reproduce the published figures.

@@ -138,10 +138,6 @@ The original IoU implementation also created or expanded small boxes in degree s
 | `gadm_410.gpkg` (approximately 2.6 GB) | Too large for a normal GitHub repository and distributed by an external data provider | Download the required administrative boundaries from [GADM](https://gadm.org/data.html) |
 | `cities15000.txt` | Upstream GeoNames source data should remain linked to its provider | Download it from the [GeoNames export directory](https://download.geonames.org/export/dump/) |
 | `sampled_pois.csv`, `sampled_pois_with_truth.csv`, and `sampled_pois_with_preds.csv` | Intermediate files duplicate information contained in the final course-run results | Regenerate them from the sampling, reference-geocoding, and inference stages |
-| Original prototype scripts | Replaced by the smaller public pipeline because the course versions contained duplicated experiments, ambiguous model fallback behavior, and reference information in the inference prompt | Use the cleaned scripts under `src/` |
-| `.idea/`, `__pycache__/`, `.DS_Store`, `Project.zip`, and exploratory test plots | Local development state, caches, duplicated files, and debugging artifacts | Not required to reproduce the public workflow |
-| API credentials and `.env` | Private secrets must never be committed | Copy `.env.example` to `.env` and provide your own credentials locally |
-| Course report and presentation files | Retained as local academic deliverables; the repository summarizes their methods and results in a web-readable form | Available from the author on request |
 
 Additional data provenance notes are provided in [`data/README.md`](data/README.md).
 
