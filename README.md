@@ -12,7 +12,7 @@ The final course presentation organized the work into five stages:
 
 1. **Global sampling.** The design targeted 5,000 cities from GeoNames `cities15000`, aimed to keep sampled cities geographically separated, and selected one OpenStreetMap POI within 10 km of each city centre. Each query used the form `[POI, Administrative Region, Country]`.
 2. **Reference generation.** Nominatim supplied reference coordinates and POI bounding boxes. GADM supplied country and administrative-region boundaries.
-3. **LLM geocoding.** GPT-3.5, GPT-4, and the intended DeepSeek R1 model returned a point and a bounding box for each place description.
+3. **LLM geocoding.** GPT-3.5, GPT-4, and DeepSeek R1 returned a point and a bounding box for each place description.
 4. **Error analysis.** Haversine distance measured point-location error. Intersection over Union (IoU) measured bounding-box overlap.
 5. **Spatial aggregation.** H3 resolution 2 cells grouped the observations so regional error patterns could be compared on global maps.
 
