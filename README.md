@@ -1,4 +1,4 @@
-# Global Evaluation of LLM Geoparsing
+# Exploring Spatial Bias in LLM-based Geocoding
 
 An exploratory geospatial AI course project that evaluates how consistently large language models convert place descriptions into coordinates and bounding boxes across the world.
 
